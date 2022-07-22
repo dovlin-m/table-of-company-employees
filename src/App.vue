@@ -212,16 +212,7 @@
           mdi-delete
         </v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn
-            color="primary"
-            @click="initialize"
-        >
-          Reset
-        </v-btn>
-      </template>
     </v-data-table>
-    <router-link to="@/components/Inform-page.vue"></router-link>
   </v-app>
 </template>
 
@@ -484,15 +475,12 @@ export default {
   },
 
   created () {
-    let indexID = 0
     if (localStorage.length) {
       for (let i = 0, length = localStorage.length + 1; i < length; i++) {
         const oldItem = JSON.parse(localStorage.getItem(`${i}`))
         if (!(oldItem === null)) {
-          oldItem.id = indexID
-          indexID += 1
           this.workers.push(oldItem)
-          localStorage.setItem(oldItem.id, JSON.stringify(oldItem))
+          localStorage.setItem(`${oldItem.id}`, JSON.stringify(oldItem))
         }
       }
     } else {
@@ -501,14 +489,9 @@ export default {
         localStorage.setItem(item.id, JSON.stringify(item))
       }
     }
-    this.initialize()
   },
 
   methods: {
-    initialize () {
-      this.workers
-    },
-
     editItem (item) {
       this.editedIndex = this.workers.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -524,16 +507,16 @@ export default {
     deleteItemConfirm () {
       let indexID = 0
       this.workers.splice(this.editedIndex, 1)
-      localStorage.removeItem(this.editedItem.id)
+      localStorage.removeItem(`${this.editedItem.id}`)
       for (let i = 0, length = localStorage.length + 1; i < length; i++) {
         const oldItem = JSON.parse(localStorage.getItem(`${i}`))
         localStorage.removeItem(`${i}`)
-        this.workers.splice(this.editedIndex, 1)
         if (!(oldItem === null)) {
+          this.workers.splice(this.editedIndex, 1)
           oldItem.id = indexID
           indexID += 1
           this.workers.push(oldItem)
-          localStorage.setItem(oldItem.id, JSON.stringify(oldItem))
+          localStorage.setItem(`${oldItem.id}`, JSON.stringify(oldItem))
         }
       }
       this.closeDelete()
@@ -565,7 +548,7 @@ export default {
         let item = localStorage.length
         this.editedItem.id = item
         this.workers.push(this.editedItem)
-        localStorage.setItem(item, JSON.stringify(this.editedItem))
+        localStorage.setItem(`${item}`, JSON.stringify(this.editedItem))
         this.close()
       }
     },
