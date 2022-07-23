@@ -55,7 +55,6 @@
                         md="4"
                     >
                       <v-text-field
-
                           v-model="editedItem.firstName"
                           :error-messages="nameErrors"
                           :counter="10"
